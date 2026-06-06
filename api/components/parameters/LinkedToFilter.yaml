@@ -1,0 +1,7 @@
+name: linked_to
+in: query
+required: false
+description: Restrict to notes linked to or from this note (either direction).
+schema:
+  type: string
+  format: uuid

@@ -1,0 +1,64 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    readOnly: true
+  title:
+    type: string
+    maxLength: 200
+    minLength: 1
+  body:
+    description: Markdown.
+    type: string
+  category:
+    $ref: Category.yaml
+  tags:
+    type: array
+    items:
+      $ref: TagName.yaml
+    uniqueItems: true
+  target_id:
+    description: For ai_suggested_edit, the canon note this edit targets.
+    type:
+      - string
+      - 'null'
+    format: uuid
+  created_by:
+    description: Origin of the note (e.g. a user id or the assistant).
+    type:
+      - string
+      - 'null'
+  expires_at:
+    description: Inactivity TTL for ai_draft; null otherwise.
+    type:
+      - string
+      - 'null'
+    format: date-time
+  canonized_at:
+    description: When the AI mark was removed.
+    type:
+      - string
+      - 'null'
+    format: date-time
+  canonized_by:
+    description: Who removed the AI mark.
+    type:
+      - string
+      - 'null'
+  created_at:
+    type: string
+    format: date-time
+    readOnly: true
+  updated_at:
+    type: string
+    format: date-time
+    readOnly: true
+required:
+  - id
+  - title
+  - body
+  - category
+  - tags
+  - created_at
+  - updated_at

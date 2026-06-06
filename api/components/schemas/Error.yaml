@@ -1,0 +1,23 @@
+type: object
+properties:
+  code:
+    description: Machine-readable, e.g. not_found, conflict, validation_failed.
+    type: string
+  message:
+    type: string
+  fields:
+    description: Per-field detail for validation errors.
+    type: array
+    items:
+      type: object
+      required:
+        - field
+        - message
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+required:
+  - code
+  - message

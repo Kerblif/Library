@@ -1,0 +1,66 @@
+get:
+  operationId: listNotes
+  summary: List notes
+  parameters:
+    - $ref: ../components/parameters/CategoryFilter.yaml
+    - $ref: ../components/parameters/TagFilter.yaml
+    - $ref: ../components/parameters/LinkedToFilter.yaml
+    - $ref: ../components/parameters/QueryFilter.yaml
+    - $ref: ../components/parameters/Limit.yaml
+    - $ref: ../components/parameters/Cursor.yaml
+  responses:
+    '200':
+      description: A page of notes.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/NoteList.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+  tags:
+    - notes
+post:
+  operationId: submitNoteOperation
+  summary: Create, suggest an edit, or canonize
+  description: |
+    Single write surface for the authoring workflow. The body is a
+    discriminated union on `op`:
+
+    - `create` — new `canon` (human) or `ai_draft` (assistant) note.
+    - `suggest_edit` — propose a change to a `canon` note; produces an
+      `ai_suggested_edit` note that targets it, without mutating the canon.
+    - `canonize` — a human commits a draft: an `ai_draft` becomes `canon`,
+      or an `ai_suggested_edit` is applied to its target. The actor and time
+      are logged on the resulting note.
+
+    In-place field edits of an existing note go through `PATCH /notes/{id}`
+    instead.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/NoteOperation.yaml
+  responses:
+    '200':
+      description: Existing note transitioned (canonize).
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Note.yaml
+    '201':
+      description: Note created (create, suggest_edit).
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Note.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '404':
+      $ref: ../components/responses/NotFound.yaml
+    '409':
+      $ref: ../components/responses/Conflict.yaml
+    '422':
+      $ref: ../components/responses/UnprocessableEntity.yaml
+  tags:
+    - notes

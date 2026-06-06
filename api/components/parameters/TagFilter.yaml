@@ -1,0 +1,10 @@
+name: tag
+in: query
+required: false
+description: Repeatable; notes must carry all given tags.
+style: form
+explode: true
+schema:
+  type: array
+  items:
+    $ref: ../schemas/TagName.yaml

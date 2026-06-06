@@ -1,0 +1,16 @@
+type: object
+properties:
+  id:
+    type: string
+    format: uuid
+    readOnly: true
+  name:
+    $ref: TagName.yaml
+  note_count:
+    type: integer
+    minimum: 0
+    readOnly: true
+required:
+  - id
+  - name
+  - note_count

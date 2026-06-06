@@ -1,0 +1,9 @@
+description: |
+  canon — human-verified. ai_draft — assistant draft, expires on
+  inactivity. ai_suggested_edit — proposed change to a canon note,
+  queued for review.
+type: string
+enum:
+  - canon
+  - ai_draft
+  - ai_suggested_edit

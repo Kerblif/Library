@@ -1,0 +1,53 @@
+parameters:
+  - $ref: ../components/parameters/NoteId.yaml
+get:
+  operationId: getNote
+  summary: Get a note
+  responses:
+    '200':
+      description: The note.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Note.yaml
+    '404':
+      $ref: ../components/responses/NotFound.yaml
+  tags:
+    - notes
+patch:
+  operationId: updateNote
+  summary: Edit a note in place
+  description: |
+    Direct mutation of a note's own fields. Does not change category. The MCP
+    layer does not expose this for `canon` notes.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../components/schemas/NoteUpdate.yaml
+  responses:
+    '200':
+      description: The updated note.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/Note.yaml
+    '400':
+      $ref: ../components/responses/BadRequest.yaml
+    '404':
+      $ref: ../components/responses/NotFound.yaml
+    '422':
+      $ref: ../components/responses/UnprocessableEntity.yaml
+  tags:
+    - notes
+delete:
+  operationId: deleteNote
+  summary: Delete a note
+  responses:
+    '204':
+      description: Deleted.
+    '404':
+      $ref: ../components/responses/NotFound.yaml
+  tags:
+    - notes

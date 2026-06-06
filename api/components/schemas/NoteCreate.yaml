@@ -1,0 +1,29 @@
+type: object
+properties:
+  op:
+    type: string
+    const: create
+  title:
+    type: string
+    maxLength: 200
+    minLength: 1
+  body:
+    type: string
+  category:
+    description: A fresh note is either human canon or an assistant draft.
+    type: string
+    enum:
+      - canon
+      - ai_draft
+  tags:
+    type: array
+    items:
+      $ref: TagName.yaml
+    uniqueItems: true
+  created_by:
+    type: string
+required:
+  - op
+  - title
+  - body
+  - category

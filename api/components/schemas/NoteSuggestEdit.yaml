@@ -1,0 +1,28 @@
+description: Proposed change to a canon note. Produces an ai_suggested_edit.
+type: object
+properties:
+  op:
+    type: string
+    const: suggest_edit
+  target_id:
+    description: The canon note being amended.
+    type: string
+    format: uuid
+  title:
+    type: string
+    maxLength: 200
+    minLength: 1
+  body:
+    description: Proposed markdown.
+    type: string
+  tags:
+    type: array
+    items:
+      $ref: TagName.yaml
+    uniqueItems: true
+  created_by:
+    type: string
+required:
+  - op
+  - target_id
+  - body

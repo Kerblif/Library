@@ -1,0 +1,7 @@
+name: q
+in: query
+required: false
+description: Full-text match over title and body.
+schema:
+  type: string
+  minLength: 1

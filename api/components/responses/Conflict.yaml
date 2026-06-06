@@ -1,0 +1,5 @@
+description: Conflicts with current state (e.g. duplicate link, note not in a canonizable state).
+content:
+  application/json:
+    schema:
+      $ref: ../schemas/Error.yaml

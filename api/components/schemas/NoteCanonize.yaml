@@ -1,0 +1,17 @@
+description: Human commit. Promotes an ai_draft, or applies an ai_suggested_edit to its target.
+type: object
+properties:
+  op:
+    type: string
+    const: canonize
+  note_id:
+    type: string
+    format: uuid
+  actor:
+    description: Who is committing; logged on the result.
+    type: string
+    minLength: 1
+required:
+  - op
+  - note_id
+  - actor
