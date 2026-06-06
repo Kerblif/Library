@@ -1,0 +1,10 @@
+# IDE
+.idea
+.vscode
+
+# Derived single-file specs
+/api/openapi.bundle.yaml
+/api/openapi.oas30.yaml
+
+# Generated code (regenerate with `make generate`)
+*.gen.go
