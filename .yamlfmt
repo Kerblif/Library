@@ -1,0 +1,10 @@
+include:
+  - "**/*.yaml"
+  - "**/*.yml"
+exclude:
+  - api/**
+gitignore_excludes: true
+doublestar: true
+formatter:
+  type: basic
+  retain_line_breaks_single: true
