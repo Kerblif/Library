@@ -1,0 +1,94 @@
+openapi: 3.1.0
+info:
+  title: Knowledge Board API
+  version: 0.1.0
+  description: |
+    CRUD-API for a markdown knowledge board. The spec is the single source of
+    truth: it generates the Go strict-server for the UI and feeds the MCP tool
+    layer for the assistant.
+
+    Notes carry a category that drives the AI workflow. The assistant only ever
+    produces `ai_draft` / `ai_suggested_edit`; promotion to `canon` is a human
+    action (see the canonize operation). That invariant is enforced by which
+    operations the MCP layer exposes, not by the HTTP contract itself.
+servers:
+  - url: http://localhost:8080
+    description: local
+paths:
+  /notes:
+    $ref: paths/notes.yaml
+  /notes/{noteId}:
+    $ref: paths/notes_{noteId}.yaml
+  /notes/{noteId}/links:
+    $ref: paths/notes_{noteId}_links.yaml
+  /links:
+    $ref: paths/links.yaml
+  /links/{linkId}:
+    $ref: paths/links_{linkId}.yaml
+  /tags:
+    $ref: paths/tags.yaml
+components:
+  parameters:
+    CategoryFilter:
+      $ref: components/parameters/CategoryFilter.yaml
+    Cursor:
+      $ref: components/parameters/Cursor.yaml
+    Limit:
+      $ref: components/parameters/Limit.yaml
+    LinkedToFilter:
+      $ref: components/parameters/LinkedToFilter.yaml
+    LinkId:
+      $ref: components/parameters/LinkId.yaml
+    NoteId:
+      $ref: components/parameters/NoteId.yaml
+    QueryFilter:
+      $ref: components/parameters/QueryFilter.yaml
+    TagFilter:
+      $ref: components/parameters/TagFilter.yaml
+  schemas:
+    Category:
+      $ref: components/schemas/Category.yaml
+    TagName:
+      $ref: components/schemas/TagName.yaml
+    Note:
+      $ref: components/schemas/Note.yaml
+    NoteList:
+      $ref: components/schemas/NoteList.yaml
+    Error:
+      $ref: components/schemas/Error.yaml
+    NoteCreate:
+      $ref: components/schemas/NoteCreate.yaml
+    NoteSuggestEdit:
+      $ref: components/schemas/NoteSuggestEdit.yaml
+    NoteCanonize:
+      $ref: components/schemas/NoteCanonize.yaml
+    NoteOperation:
+      $ref: components/schemas/NoteOperation.yaml
+    NoteUpdate:
+      $ref: components/schemas/NoteUpdate.yaml
+    Link:
+      $ref: components/schemas/Link.yaml
+    NoteLinks:
+      $ref: components/schemas/NoteLinks.yaml
+    LinkCreate:
+      $ref: components/schemas/LinkCreate.yaml
+    Tag:
+      $ref: components/schemas/Tag.yaml
+    TagList:
+      $ref: components/schemas/TagList.yaml
+  responses:
+    BadRequest:
+      $ref: components/responses/BadRequest.yaml
+    NotFound:
+      $ref: components/responses/NotFound.yaml
+    Conflict:
+      $ref: components/responses/Conflict.yaml
+    UnprocessableEntity:
+      $ref: components/responses/UnprocessableEntity.yaml
+tags:
+  - name: notes
+    description: Markdown notes, their category lifecycle and the authoring workflow.
+  - name: links
+    description: Directed links between notes.
+  - name: tags
+    description: Tag discovery.

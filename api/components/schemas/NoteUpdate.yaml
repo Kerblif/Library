@@ -1,0 +1,15 @@
+description: Partial update; at least one field.
+type: object
+properties:
+  title:
+    type: string
+    maxLength: 200
+    minLength: 1
+  body:
+    type: string
+  tags:
+    type: array
+    items:
+      $ref: TagName.yaml
+    uniqueItems: true
+minProperties: 1

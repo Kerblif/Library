@@ -1,0 +1,13 @@
+get:
+  operationId: listTags
+  summary: List tags
+  description: Distinct tags in use, with note counts, for filter UIs.
+  responses:
+    '200':
+      description: Tags in use.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/TagList.yaml
+  tags:
+    - tags

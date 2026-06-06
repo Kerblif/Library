@@ -1,0 +1,5 @@
+description: Lowercase slug.
+type: string
+maxLength: 64
+minLength: 1
+pattern: ^[a-z0-9][a-z0-9-]*$

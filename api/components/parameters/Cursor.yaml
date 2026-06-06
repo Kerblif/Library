@@ -1,0 +1,6 @@
+name: cursor
+in: query
+required: false
+description: Opaque cursor from a previous page's next_cursor.
+schema:
+  type: string

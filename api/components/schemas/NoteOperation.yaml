@@ -1,0 +1,10 @@
+discriminator:
+  propertyName: op
+  mapping:
+    create: '#/components/schemas/NoteCreate'
+    suggest_edit: '#/components/schemas/NoteSuggestEdit'
+    canonize: '#/components/schemas/NoteCanonize'
+oneOf:
+  - $ref: NoteCreate.yaml
+  - $ref: NoteSuggestEdit.yaml
+  - $ref: NoteCanonize.yaml

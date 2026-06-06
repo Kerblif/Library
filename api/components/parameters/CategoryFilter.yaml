@@ -1,0 +1,5 @@
+name: category
+in: query
+required: false
+schema:
+  $ref: ../schemas/Category.yaml

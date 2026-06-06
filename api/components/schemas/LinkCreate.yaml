@@ -1,0 +1,11 @@
+type: object
+properties:
+  source_id:
+    type: string
+    format: uuid
+  target_id:
+    type: string
+    format: uuid
+required:
+  - source_id
+  - target_id

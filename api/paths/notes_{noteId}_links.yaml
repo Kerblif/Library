@@ -1,0 +1,17 @@
+parameters:
+  - $ref: ../components/parameters/NoteId.yaml
+get:
+  operationId: listNoteLinks
+  summary: List a note's links
+  description: Edges touching the note, split by direction.
+  responses:
+    '200':
+      description: Incoming and outgoing edges.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/NoteLinks.yaml
+    '404':
+      $ref: ../components/responses/NotFound.yaml
+  tags:
+    - links

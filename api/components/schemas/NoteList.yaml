@@ -1,0 +1,13 @@
+type: object
+properties:
+  items:
+    type: array
+    items:
+      $ref: Note.yaml
+  next_cursor:
+    description: Pass as cursor to fetch the next page; null on the last page.
+    type:
+      - string
+      - 'null'
+required:
+  - items

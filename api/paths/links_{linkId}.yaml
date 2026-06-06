@@ -1,0 +1,12 @@
+parameters:
+  - $ref: ../components/parameters/LinkId.yaml
+delete:
+  operationId: deleteLink
+  summary: Delete a link
+  responses:
+    '204':
+      description: Deleted.
+    '404':
+      $ref: ../components/responses/NotFound.yaml
+  tags:
+    - links

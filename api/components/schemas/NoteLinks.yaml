@@ -1,0 +1,13 @@
+type: object
+properties:
+  outgoing:
+    type: array
+    items:
+      $ref: Link.yaml
+  incoming:
+    type: array
+    items:
+      $ref: Link.yaml
+required:
+  - outgoing
+  - incoming
