@@ -4,7 +4,11 @@ discriminator:
     create: '#/components/schemas/NoteCreate'
     suggest_edit: '#/components/schemas/NoteSuggestEdit'
     canonize: '#/components/schemas/NoteCanonize'
+    archive: '#/components/schemas/NoteArchive'
+    restore: '#/components/schemas/NoteRestore'
 oneOf:
   - $ref: NoteCreate.yaml
   - $ref: NoteSuggestEdit.yaml
   - $ref: NoteCanonize.yaml
+  - $ref: NoteArchive.yaml
+  - $ref: NoteRestore.yaml

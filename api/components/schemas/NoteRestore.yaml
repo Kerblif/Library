@@ -1,0 +1,17 @@
+description: Bring an archived note back into circulation.
+type: object
+properties:
+  op:
+    type: string
+    const: restore
+  note_id:
+    type: string
+    format: uuid
+  actor:
+    description: Who is restoring the note.
+    type: string
+    minLength: 1
+required:
+  - op
+  - note_id
+  - actor

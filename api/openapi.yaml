@@ -17,6 +17,8 @@ servers:
 paths:
   /notes:
     $ref: paths/notes.yaml
+  /notes/counts:
+    $ref: paths/notes_counts.yaml
   /notes/{noteId}:
     $ref: paths/notes_{noteId}.yaml
   /notes/{noteId}/links:
@@ -29,6 +31,8 @@ paths:
     $ref: paths/tags.yaml
 components:
   parameters:
+    ArchivedFilter:
+      $ref: components/parameters/ArchivedFilter.yaml
     CategoryFilter:
       $ref: components/parameters/CategoryFilter.yaml
     Cursor:
@@ -62,8 +66,14 @@ components:
       $ref: components/schemas/NoteSuggestEdit.yaml
     NoteCanonize:
       $ref: components/schemas/NoteCanonize.yaml
+    NoteArchive:
+      $ref: components/schemas/NoteArchive.yaml
+    NoteRestore:
+      $ref: components/schemas/NoteRestore.yaml
     NoteOperation:
       $ref: components/schemas/NoteOperation.yaml
+    NoteCounts:
+      $ref: components/schemas/NoteCounts.yaml
     NoteUpdate:
       $ref: components/schemas/NoteUpdate.yaml
     Link:
