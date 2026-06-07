@@ -1,0 +1,13 @@
+get:
+  operationId: getNoteCounts
+  summary: Note counts by category
+  description: Active-note counts per category, for the sidebar badges.
+  responses:
+    '200':
+      description: Counts by category.
+      content:
+        application/json:
+          schema:
+            $ref: ../components/schemas/NoteCounts.yaml
+  tags:
+    - notes

@@ -1,0 +1,16 @@
+description: Active-note counts per category, for menu badges.
+type: object
+properties:
+  canon:
+    type: integer
+    minimum: 0
+  ai_draft:
+    type: integer
+    minimum: 0
+  ai_suggested_edit:
+    type: integer
+    minimum: 0
+required:
+  - canon
+  - ai_draft
+  - ai_suggested_edit

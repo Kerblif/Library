@@ -1,0 +1,11 @@
+name: archived
+in: query
+required: false
+description: Visibility — active notes only (default), archived only, or all.
+schema:
+  type: string
+  default: 'false'
+  enum:
+    - 'false'
+    - 'true'
+    - all

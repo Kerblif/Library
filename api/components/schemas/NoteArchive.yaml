@@ -1,0 +1,17 @@
+description: Take a canon note out of circulation. Archives and time are logged on the note.
+type: object
+properties:
+  op:
+    type: string
+    const: archive
+  note_id:
+    type: string
+    format: uuid
+  actor:
+    description: Who is archiving; logged on the note.
+    type: string
+    minLength: 1
+required:
+  - op
+  - note_id
+  - actor

@@ -54,11 +54,27 @@ properties:
     type: string
     format: date-time
     readOnly: true
+  archived:
+    description: Whether the note is out of circulation.
+    type: boolean
+    default: false
+  archived_at:
+    description: When the note was archived.
+    type:
+      - string
+      - 'null'
+    format: date-time
+  archived_by:
+    description: Who archived the note.
+    type:
+      - string
+      - 'null'
 required:
   - id
   - title
   - body
   - category
   - tags
+  - archived
   - created_at
   - updated_at
