@@ -7,6 +7,8 @@ import "os"
 type Config struct {
 	// HTTPAddr is the listen address for the HTTP API.
 	HTTPAddr string
+	// DatabaseURL is the Postgres connection string (pgx/libpq DSN or URL).
+	DatabaseURL string
 }
 
 // Load reads configuration from the environment, applying defaults.
@@ -19,5 +21,11 @@ func Load() Config {
 			addr = ":8080"
 		}
 	}
-	return Config{HTTPAddr: addr}
+
+	dbURL := os.Getenv("DATABASE_URL")
+	if dbURL == "" {
+		dbURL = "postgres://library:library@localhost:5432/library?sslmode=disable"
+	}
+
+	return Config{HTTPAddr: addr, DatabaseURL: dbURL}
 }
