@@ -1,0 +1,11 @@
+# Keep the build context to what `go build ./cmd/server` needs.
+# Generated *.gen.go live under internal/ and are NOT ignored here.
+.git
+.github
+.idea
+.vscode
+*.md
+.make
+tools
+Dockerfile
+.dockerignore
