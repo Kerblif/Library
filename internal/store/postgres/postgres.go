@@ -1,6 +1,5 @@
-// Package postgres is the Postgres-backed implementation of store.Repository.
-// It is the only package that imports internal/db; everything else speaks the
-// store domain types.
+// Package postgres implements store.Repository. It is the only package that
+// imports internal/db.
 package postgres
 
 import (
@@ -17,7 +16,6 @@ import (
 	"github.com/Kerblif/Library/internal/store"
 )
 
-// Repo implements store.Repository over a pgx connection pool.
 type Repo struct {
 	pool *pgxpool.Pool
 	q    *db.Queries
@@ -25,7 +23,6 @@ type Repo struct {
 
 var _ store.Repository = (*Repo)(nil)
 
-// New opens a connection pool, verifies connectivity, and returns a Repo.
 func New(ctx context.Context, dsn string) (*Repo, error) {
 	pool, err := pgxpool.New(ctx, dsn)
 	if err != nil {
@@ -38,11 +35,9 @@ func New(ctx context.Context, dsn string) (*Repo, error) {
 	return &Repo{pool: pool, q: db.New(pool)}, nil
 }
 
-// Close releases the connection pool.
 func (r *Repo) Close() { r.pool.Close() }
 
-// inTx runs fn inside a transaction and returns the produced note. The
-// transaction rolls back unless fn returns nil and the commit succeeds.
+// inTx runs fn in a transaction, rolling back unless it returns nil and commits.
 func (r *Repo) inTx(ctx context.Context, fn func(q *db.Queries) (store.Note, error)) (store.Note, error) {
 	tx, err := r.pool.Begin(ctx)
 	if err != nil {
@@ -93,8 +88,7 @@ func (r *Repo) SuggestEdit(ctx context.Context, in store.SuggestEditInput) (stor
 		if in.Title != nil {
 			title = *in.Title
 		}
-		// A suggestion is a complete proposed version: default its tags to the
-		// target's current set so applying it never silently drops tags.
+		// Default tags to the target's so applying the suggestion never drops them.
 		tags := in.Tags
 		if len(tags) == 0 {
 			tags = target.Tags
@@ -324,7 +318,6 @@ func (r *Repo) ListTags(ctx context.Context) ([]store.Tag, error) {
 	return tags, nil
 }
 
-// attachTags upserts and links the given tag names, no-op when empty.
 func attachTags(ctx context.Context, q *db.Queries, noteID uuid.UUID, names []string) error {
 	if len(names) == 0 {
 		return nil
@@ -335,7 +328,7 @@ func attachTags(ctx context.Context, q *db.Queries, noteID uuid.UUID, names []st
 	return nil
 }
 
-// loadNote re-reads a note with its resolved tag set after a mutation.
+// loadNote re-reads a note with its tags after a mutation.
 func loadNote(ctx context.Context, q *db.Queries, id uuid.UUID) (store.Note, error) {
 	row, err := q.GetNote(ctx, id)
 	if err != nil {
@@ -357,7 +350,7 @@ func mapErr(err error) error {
 		switch pgErr.Code {
 		case "23505": // unique_violation
 			return store.ErrConflict
-		case "23503": // foreign_key_violation — a referenced note is missing
+		case "23503": // foreign_key_violation
 			return store.ErrNotFound
 		case "23514", "23502", "22001": // check / not-null / string-too-long
 			return store.ErrInvalid

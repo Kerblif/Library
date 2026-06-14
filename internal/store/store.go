@@ -1,11 +1,6 @@
-// Package store defines the persistence port for the Library domain: the
-// domain types the HTTP and MCP layers speak, the Repository interface they
-// depend on, and sentinel errors that callers map to transport status codes.
-//
-// It is deliberately free of any database or transport dependency — the
-// Postgres adapter (internal/store/postgres) is the only thing that imports
-// internal/db, and internal/rest maps between these types and the generated
-// api package.
+// Package store defines the persistence port: the domain types the HTTP and MCP
+// layers speak, the Repository interface, and sentinel errors callers map to
+// transport status codes. It imports neither the database nor any transport.
 package store
 
 import (
@@ -18,20 +13,13 @@ import (
 	"github.com/google/uuid"
 )
 
-// Sentinel errors. Adapters return these; transport layers map them to status
-// codes (404, 409, 422). Any other error is an internal failure (500).
+// Sentinel errors adapters return; transport layers map them to 404 / 409 / 422.
 var (
-	// ErrNotFound is returned when a referenced entity does not exist.
 	ErrNotFound = errors.New("not found")
-	// ErrConflict is returned when an operation is invalid for the entity's
-	// current state (e.g. canonizing a note that is already canon).
-	ErrConflict = errors.New("conflict")
-	// ErrInvalid is returned when the request is semantically unprocessable
-	// (e.g. a self-link, or a constraint the database rejects).
-	ErrInvalid = errors.New("invalid")
+	ErrConflict = errors.New("conflict") // operation invalid for the entity's current state
+	ErrInvalid  = errors.New("invalid")  // semantically unprocessable (e.g. a self-link)
 )
 
-// Category mirrors the note category enum.
 type Category string
 
 const (
@@ -40,7 +28,6 @@ const (
 	CategoryAISuggestedEdit Category = "ai_suggested_edit"
 )
 
-// Note is a knowledge-board note with its resolved tag set.
 type Note struct {
 	ID          uuid.UUID
 	Title       string
@@ -59,7 +46,6 @@ type Note struct {
 	ArchivedBy  *string
 }
 
-// Link is a directed edge between two notes.
 type Link struct {
 	ID        uuid.UUID
 	SourceID  uuid.UUID
@@ -67,27 +53,23 @@ type Link struct {
 	CreatedAt time.Time
 }
 
-// NoteLinks splits a note's edges by direction.
 type NoteLinks struct {
 	Incoming []Link
 	Outgoing []Link
 }
 
-// Tag is a tag in use with the number of notes that carry it.
 type Tag struct {
 	ID        uuid.UUID
 	Name      string
 	NoteCount int
 }
 
-// Counts holds active-note counts per category.
 type Counts struct {
 	Canon           int
 	AIDraft         int
 	AISuggestedEdit int
 }
 
-// CreateNoteInput creates a fresh canon or ai_draft note.
 type CreateNoteInput struct {
 	Title     string
 	Body      string
@@ -106,8 +88,8 @@ type SuggestEditInput struct {
 	CreatedBy *string
 }
 
-// UpdateNoteInput is a partial in-place edit. A nil field is left unchanged; a
-// non-nil Tags (even empty) replaces the note's tag set.
+// UpdateNoteInput is a partial edit: a nil field is left unchanged; a non-nil
+// Tags (even empty) replaces the note's tag set.
 type UpdateNoteInput struct {
 	ID    uuid.UUID
 	Title *string
@@ -115,7 +97,7 @@ type UpdateNoteInput struct {
 	Tags  *[]string
 }
 
-// NoteFilter selects and paginates notes. A nil pointer disables that filter.
+// NoteFilter selects and paginates notes. A nil pointer disables that filter;
 // Archived nil means "all"; Cursor nil means the first page.
 type NoteFilter struct {
 	Category *Category
@@ -127,14 +109,14 @@ type NoteFilter struct {
 	Cursor   *Cursor
 }
 
-// NotesPage is one keyset page of notes. Next is nil on the last page.
+// NotesPage is one keyset page; Next is nil on the last page.
 type NotesPage struct {
 	Items []Note
 	Next  *Cursor
 }
 
-// Cursor is the keyset position for note pagination: the (updated_at, id) of
-// the last row of a page. Notes are ordered by (updated_at, id) descending.
+// Cursor is the keyset position (the last row's updated_at, id) for note
+// pagination, which is ordered by (updated_at, id) descending.
 type Cursor struct {
 	UpdatedAt time.Time
 	ID        uuid.UUID

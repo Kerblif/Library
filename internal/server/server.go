@@ -19,15 +19,23 @@ type Server struct {
 	http *http.Server
 }
 
-// New builds the router, mounts the API handlers, and returns a ready server.
-func New(cfg config.Config, si api.ServerInterface) *Server {
+// New builds the HTTP server: the REST API plus, when non-nil, the MCP handler at /mcp.
+func New(cfg config.Config, si api.ServerInterface, mcpHandler http.Handler) *Server {
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-	r.Use(middleware.Timeout(30 * time.Second))
 
-	api.HandlerFromMux(si, r)
+	// MCP holds long-lived SSE streams, so keep it off the per-request timeout.
+	if mcpHandler != nil {
+		r.Handle("/mcp", mcpHandler)
+		r.Handle("/mcp/*", mcpHandler)
+	}
+
+	r.Group(func(gr chi.Router) {
+		gr.Use(middleware.Timeout(30 * time.Second))
+		api.HandlerFromMux(si, gr)
+	})
 
 	return &Server{
 		http: &http.Server{

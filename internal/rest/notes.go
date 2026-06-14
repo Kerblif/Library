@@ -29,9 +29,6 @@ func (s *Server) SubmitNoteOperation(ctx context.Context, req api.SubmitNoteOper
 		return badSubmit("bad_request", "missing or invalid op"), nil
 	}
 
-	// create / suggest_edit produce a new note (201); canonize / archive /
-	// restore transition an existing one (200). created and transitioned wrap
-	// the repo result with the right status and shared error mapping.
 	switch op {
 	case string(api.Create):
 		c, err := req.Body.AsNoteCreate()
@@ -143,8 +140,8 @@ func (s *Server) DeleteNote(ctx context.Context, req api.DeleteNoteRequestObject
 	return api.DeleteNote204Response{}, nil
 }
 
-// noteFilter builds a store filter from the query parameters. LinkedTo and
-// Query are pointer aliases of the store fields, so they pass straight through.
+// noteFilter builds a store filter; LinkedTo and Query are pointer aliases that
+// assign straight through.
 func noteFilter(p api.ListNotesParams) (store.NoteFilter, error) {
 	f := store.NoteFilter{
 		Limit:    20,
@@ -172,8 +169,7 @@ func noteFilter(p api.ListNotesParams) (store.NoteFilter, error) {
 	return f, nil
 }
 
-// archivedFilter maps the visibility enum to a tri-state flag: active-only by
-// default, archived-only for "true", or nil ("all") to disable the filter.
+// archivedFilter maps the enum to a tri-state flag: active by default, archived for "true", nil for "all".
 func archivedFilter(v *api.ListNotesParamsArchived) *bool {
 	val := api.ListNotesParamsArchivedFalse
 	if v != nil {
@@ -191,7 +187,6 @@ func archivedFilter(v *api.ListNotesParamsArchived) *bool {
 	}
 }
 
-// toNoteList maps a store page to the wire list, encoding the next cursor.
 func toNoteList(page store.NotesPage) api.NoteList {
 	items := make([]api.Note, len(page.Items))
 	for i, n := range page.Items {
@@ -205,7 +200,7 @@ func toNoteList(page store.NotesPage) api.NoteList {
 	return list
 }
 
-// created wraps a repo result that produced a new note (HTTP 201).
+// created returns the new note as HTTP 201.
 func created(n store.Note, err error) (api.SubmitNoteOperationResponseObject, error) {
 	if err != nil {
 		return submitError(err)
@@ -213,7 +208,7 @@ func created(n store.Note, err error) (api.SubmitNoteOperationResponseObject, er
 	return api.SubmitNoteOperation201JSONResponse(toAPINote(n)), nil
 }
 
-// transitioned wraps a repo result that changed an existing note (HTTP 200).
+// transitioned returns the changed note as HTTP 200.
 func transitioned(n store.Note, err error) (api.SubmitNoteOperationResponseObject, error) {
 	if err != nil {
 		return submitError(err)

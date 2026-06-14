@@ -3,11 +3,8 @@ package config
 
 import "os"
 
-// Config holds the server's runtime configuration.
 type Config struct {
-	// HTTPAddr is the listen address for the HTTP API.
-	HTTPAddr string
-	// DatabaseURL is the Postgres connection string (pgx/libpq DSN or URL).
+	HTTPAddr    string
 	DatabaseURL string
 }
 

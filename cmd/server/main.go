@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/Kerblif/Library/internal/config"
+	"github.com/Kerblif/Library/internal/mcpserver"
 	"github.com/Kerblif/Library/internal/rest"
 	"github.com/Kerblif/Library/internal/server"
 	"github.com/Kerblif/Library/internal/store/postgres"
@@ -17,6 +18,11 @@ import (
 
 func main() {
 	cfg := config.Load()
+
+	actor := os.Getenv("LIBRARY_MCP_ACTOR")
+	if actor == "" {
+		actor = "assistant"
+	}
 
 	connectCtx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	repo, err := postgres.New(connectCtx, cfg.DatabaseURL)
@@ -27,7 +33,8 @@ func main() {
 	}
 	defer repo.Close()
 
-	srv := server.New(cfg, rest.New(repo).ServerInterface())
+	mcpHandler := mcpserver.Handler(repo, actor)
+	srv := server.New(cfg, rest.New(repo).ServerInterface(), mcpHandler)
 
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
